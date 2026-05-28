@@ -12,12 +12,12 @@ int main() {
     // note: not map fixed 
     RingBuffer* rbuf = (RingBuffer*) ptr; 
 
-    char out[16];
+    Message out;
 
     
     while (true) {
-        if (rbuf->consume(out)) {
-            std::cout << out << "\n";
+        if (rbuf->consume(&out)) {
+            std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
         }
     };
     sleep(10);

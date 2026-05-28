@@ -1,6 +1,7 @@
 #include <atomic>
 #include "ring_buffer.h"
 #include <cstring>
+#include <time.h>
 
 RingBuffer::RingBuffer() : write{0}, read{0} {};
 
@@ -28,17 +29,22 @@ void RingBuffer::publish(const char* new_str){
         return;
     }
 
-    memcpy(buffer + (wr % 4) * 16, (new_str), 16); 
+    timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+
+    Message& msg = buffer[wr % 4];
+    msg.timestamp_ns = ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+    memcpy(&(msg.data), (new_str), 8); 
     set_write(wr + 1);
 }
 
-bool RingBuffer::consume(char* out){
+bool RingBuffer::consume(Message* out){
     uint32_t wr = get_write();
     uint32_t re = get_read();
     if (wr == re) {
         return false;
     }
-    memcpy(out, buffer + (re % 4 * 16), 16); 
+    memcpy(out, &buffer[re % 4], sizeof(Message)); 
     set_read(re + 1);
     return true;
 }

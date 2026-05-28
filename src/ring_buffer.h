@@ -1,11 +1,17 @@
 #include <cstdint>
 #include <atomic>
+#include <time.h>
+
+struct Message {
+    uint64_t timestamp_ns; 
+    char data[8]; 
+};
 
 class RingBuffer {
     private: 
         std::atomic<uint32_t>write; 
         std::atomic<uint32_t> read; 
-        char buffer[64];
+        Message buffer[4];
     public: 
         RingBuffer(); 
         void set_read(uint32_t new_read);
@@ -13,7 +19,7 @@ class RingBuffer {
         uint32_t get_read();
         uint32_t get_write();
         void publish(const char*);
-        bool consume(char*);
+        bool consume(Message*);
 
 };
 
