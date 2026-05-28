@@ -12,7 +12,7 @@ class RingBuffer {
         void set_write(uint32_t new_write);
         uint32_t get_read();
         uint32_t get_write();
-        void publish(char*);
+        void publish(const char*);
         bool consume(char*);
 
 };

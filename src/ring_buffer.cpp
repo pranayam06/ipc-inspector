@@ -20,7 +20,7 @@ uint32_t RingBuffer::get_write() {
     return write.load(std::memory_order_acquire);
 }
 
-void RingBuffer::publish(char* new_str){ 
+void RingBuffer::publish(const char* new_str){ 
     uint32_t wr = get_write();
     uint32_t re = get_read();
     if (wr - re == 4) {
