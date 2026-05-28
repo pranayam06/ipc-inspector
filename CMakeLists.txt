@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 set(CMAKE_CXX_EXTENSIONS Off)
 
-target_sources(ipc_inspector PRIVATE ring_buffer.cpp)
-
 add_executable(producer src/producer.cpp src/ring_buffer.cpp)
 add_executable(consumer src/consumer.cpp src/ring_buffer.cpp)
 add_executable(inspector src/inspector.cpp src/ring_buffer.cpp)

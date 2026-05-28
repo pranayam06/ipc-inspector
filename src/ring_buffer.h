@@ -3,7 +3,7 @@
 
 class RingBuffer {
     private: 
-       std::atomic<uint32_t>write; 
+        std::atomic<uint32_t>write; 
         std::atomic<uint32_t> read; 
         char buffer[64];
     public: 
@@ -12,6 +12,9 @@ class RingBuffer {
         void set_write(uint32_t new_write);
         uint32_t get_read();
         uint32_t get_write();
+        void publish(char*);
+        bool consume(char*);
+
 };
 
 static_assert(std::atomic<uint32_t>::is_always_lock_free);

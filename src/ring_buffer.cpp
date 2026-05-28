@@ -1,4 +1,44 @@
 #include <atomic>
 #include "ring_buffer.h"
+#include <cstring>
 
 RingBuffer::RingBuffer() : write{0}, read{0} {};
+
+void RingBuffer::set_read(uint32_t new_read) {
+    read.store(new_read, std::memory_order_release);
+}
+
+uint32_t RingBuffer::get_read() {
+    return read.load(std::memory_order_acquire);
+}
+
+void RingBuffer::set_write(uint32_t new_write) {
+    write.store(new_write, std::memory_order_release);
+}
+
+uint32_t RingBuffer::get_write() {
+    return write.load(std::memory_order_acquire);
+}
+
+void RingBuffer::publish(char* new_str){ 
+    uint32_t wr = get_write();
+    uint32_t re = get_read();
+    if (wr - re == 4) {
+        // all unread slots are used 
+        return;
+    }
+
+    memcpy(buffer + (wr % 4) * 16, (new_str), 16); 
+    set_write(wr + 1);
+}
+
+bool RingBuffer::consume(char* out){
+    uint32_t wr = get_write();
+    uint32_t re = get_read();
+    if (wr == re) {
+        return false;
+    }
+    memcpy(out, buffer + (re % 4 * 16), 16); 
+    set_read(re + 1);
+    return true;
+}
