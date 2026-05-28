@@ -20,6 +20,7 @@ class RingBuffer {
         uint32_t get_write();
         void publish(const char*);
         bool consume(Message*);
+        Message peek(uint32_t); 
 
 };
 

@@ -48,3 +48,7 @@ bool RingBuffer::consume(Message* out){
     set_read(re + 1);
     return true;
 }
+
+Message RingBuffer::peek(uint32_t index) {
+    return buffer[index % 4];
+}
