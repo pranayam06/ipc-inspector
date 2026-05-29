@@ -10,16 +10,17 @@ int main() {
     size_t size = sizeof(RingBuffer);
     ftruncate(fd, size);  
     void* ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    
-     
+
+
 
     RingBuffer* rbuf = new (ptr) RingBuffer();
+
+    sleep(5);
     
-    for (int i = 0; i< 8; i++) {
-        std::string msg = "message" + std::to_string(i);
+    for (int i = 0; i< 15; i++) {
+        std::string msg = "msg" + std::to_string(i);
         rbuf->publish(msg.c_str());
         sleep(1);
-
     }
     sleep(10);
     shm_unlink("/ipc-channel");
