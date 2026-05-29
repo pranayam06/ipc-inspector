@@ -11,3 +11,4 @@ add_executable(consumer src/consumer.cpp src/ring_buffer.cpp)
 add_executable(inspector src/inspector.cpp src/ring_buffer.cpp)
 
 # target_link_libraries()
+set(CMAKE_BUILD_TYPE Debug)
