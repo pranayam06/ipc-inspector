@@ -11,8 +11,6 @@ int main() {
     ftruncate(fd, size);  
     void* ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
-
-
     RingBuffer* rbuf = new (ptr) RingBuffer();
 
     sleep(5);
