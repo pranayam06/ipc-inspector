@@ -35,7 +35,14 @@ this method isn't always better than mutexes, but often is better in SPSC progra
 
 seqlock: 
 we do however have a sequence lock in the inspector to ensure that writes are not viewed while being made. 
-1) why this is only needed for inspector and not consumer? the publish function in ring buffer ensures that write is updated atomically, after the message has been updated. this is checked by the consumer, which ensures no race conditions between our producer and consumer. our inspector, however, is outside of the SPSC protocal and has no awareness of what is being written to. in this, we see that a seq lock uses a bit of bit math (get it?) to check that the buffer it is reading is 1- done being written 2- the same message as intended (such that the buffer has not been lapped). 
+1) why this is only needed for inspector and not consumer? the publish function in ring buffer ensures that write is updated atomically, after the message has been updated. this is checked by the consumer, which ensures no race conditions between our producer and consumer. our inspector, however, is outside of the SPSC protocal and has no awareness of what is being written to. 
+2) in this, we see that a seq lock uses a bit of bit math (get it?) to check that the buffer it is reading is 1- done being written 2- the same message as intended (such that the buffer has not been lapped). 
+
+lldb: 
+lldb is apple's gdb which is kinda cool. it let me view the ringbuffer in json!
+![lldb output](image.png)
+
+as you can see, writes wrap around the ringbuffer, if i step through the seq lock updater, we see an odd number, and the ringbuffer updates sequentially.
 
 ## Two implementations: 
 - lock free stats
