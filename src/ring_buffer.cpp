@@ -3,7 +3,10 @@
 #include <cstring>
 #include <time.h>
 
-RingBuffer::RingBuffer() : write{0}, read{0}, seq{} {};
+const size_t capacity = 1000;
+
+RingBuffer::RingBuffer() : write{0}, read{0}, seq{}, consumer_ready{false} {};
+
 
 void RingBuffer::set_read(uint32_t new_read) {
     read.store(new_read, std::memory_order_release);
@@ -36,7 +39,7 @@ uint32_t RingBuffer::get_seq(size_t idx) {
 void RingBuffer::publish(const char* new_str){ 
     uint32_t wr = get_write();
     uint32_t re = get_read();
-    if (wr - re == 4) {
+    if (wr - re == capacity) {
         // all unread slots are used 
         return;
     }
@@ -45,13 +48,13 @@ void RingBuffer::publish(const char* new_str){
     clock_gettime(CLOCK_MONOTONIC, &ts); 
 
 
-    Message& msg = buffer[wr % 4];
+    Message& msg = buffer[wr % capacity];
     
-    seq[wr % 4].fetch_add(1, std::memory_order_release);
+    seq[wr % capacity].fetch_add(1, std::memory_order_release);
 
     msg.timestamp_ns = ts.tv_sec * 1000000000ULL + ts.tv_nsec;
     memcpy(&(msg.data), (new_str), 8); 
-    seq[wr % 4].fetch_add(1, std::memory_order_release);
+    seq[wr % capacity].fetch_add(1, std::memory_order_release);
     set_write(wr + 1);
 }
 
@@ -61,11 +64,11 @@ bool RingBuffer::consume(Message* out){
     if (wr == re) {
         return false;
     }
-    memcpy(out, &buffer[re % 4], sizeof(Message)); 
+    memcpy(out, &buffer[re % capacity], sizeof(Message)); 
     set_read(re + 1);
     return true;
 }
 
 Message RingBuffer::peek(uint32_t index) {
-    return buffer[index % 4];
+    return buffer[index % capacity];
 }

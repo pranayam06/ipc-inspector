@@ -28,7 +28,7 @@ int main() {
             uint32_t s2 = rbuf->get_seq(inspector_index % 4);
             if (s1 != s2) continue;
             inspector_index++;
-            std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
+            // std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
         }
     };
     sleep(10);

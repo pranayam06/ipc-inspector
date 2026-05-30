@@ -24,7 +24,7 @@ int main() {
         if (wr > inspector_index) { 
             out = rbuf->peek(inspector_index);
             inspector_index++;
-            std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
+            // std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
         }
     };
     sleep(10);

@@ -11,10 +11,12 @@ class RingBuffer {
     private: 
         std::atomic<uint32_t>write; 
         std::atomic<uint32_t> read; 
-        Message buffer[4];
-        std::atomic<uint32_t> seq[4];
+        Message buffer[1000];
+        std::atomic<uint32_t> seq[1000];
+
     public: 
         RingBuffer(); 
+        std::atomic<bool> consumer_ready;
         void set_read(uint32_t new_read);
         void set_write(uint32_t new_write);
         uint32_t get_read();

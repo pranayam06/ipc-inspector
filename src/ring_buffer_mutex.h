@@ -15,6 +15,7 @@ class RingBuffer {
         Message buffer[1000];
     public: 
         RingBuffer(); 
+        std::atomic<bool> consumer_ready;
         uint32_t get_write();
         void increment_seq(size_t);
         bool check_seq(size_t);

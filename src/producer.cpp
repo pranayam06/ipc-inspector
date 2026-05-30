@@ -3,7 +3,11 @@
 #include <unistd.h>
 #include <cstring>
 #include <string>
-#include "ring_buffer_mutex.h"
+#ifdef USE_MUTEX
+    #include "ring_buffer_mutex.h"
+#else
+    #include "ring_buffer.h"
+#endif
 
 int main() {
     int fd = shm_open("/ipc-channel", O_CREAT | O_RDWR, 0666);
@@ -13,12 +17,11 @@ int main() {
 
     RingBuffer* rbuf = new (ptr) RingBuffer();
 
-    sleep(5);
-    
+    while (!rbuf->consumer_ready.load(std::memory_order_acquire)) {}
+
     for (int i = 0; i< 1000; i++) {
         std::string msg = "msg" + std::to_string(i);
         rbuf->publish(msg.c_str());
     }
-    sleep(10);
-    shm_unlink("/ipc-channel");
+    shm_unlink("/ipc-channel"); 
 }

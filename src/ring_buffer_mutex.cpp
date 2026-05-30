@@ -4,8 +4,10 @@
 #include <time.h>
 #include <mutex>
 
+const size_t capacity = 1000;
 
-RingBuffer::RingBuffer() : write{0}, read{0} {
+
+RingBuffer::RingBuffer() : write{0}, read{0}, consumer_ready{false} {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
@@ -19,7 +21,7 @@ void RingBuffer::publish(const char* new_str){
     pthread_mutex_lock(&mutex);
     uint32_t wr = write;
     uint32_t re = read;
-    if (wr - re == 4) {
+    if (wr - re == capacity) {
         // all unread slots are used 
         return;
     }
@@ -28,7 +30,7 @@ void RingBuffer::publish(const char* new_str){
     clock_gettime(CLOCK_MONOTONIC, &ts); 
 
 
-    Message& msg = buffer[wr % 4];
+    Message& msg = buffer[wr % capacity];
     
     msg.timestamp_ns = ts.tv_sec * 1000000000ULL + ts.tv_nsec;
     memcpy(&(msg.data), (new_str), 8); 
@@ -44,7 +46,7 @@ bool RingBuffer::consume(Message* out){
     if (wr == re) {
         return false;
     }
-    memcpy(out, &buffer[re % 4], sizeof(Message)); 
+    memcpy(out, &buffer[re % capacity], sizeof(Message)); 
     read = re + 1;
     return true;
     pthread_mutex_unlock(&mutex);
@@ -53,5 +55,5 @@ bool RingBuffer::consume(Message* out){
 uint32_t RingBuffer::get_write() {return write;}
 
 Message RingBuffer::peek(uint32_t index) {
-    return buffer[index % 4];
+    return buffer[index % capacity];
 }
