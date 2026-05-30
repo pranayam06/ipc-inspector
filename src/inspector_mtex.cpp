@@ -22,11 +22,7 @@ int main() {
             inspector_index = wr - 4;
         }
         if (wr > inspector_index) { 
-            uint32_t s1 = rbuf->get_seq(inspector_index % 4);
-            if (s1 & 1) continue;
             out = rbuf->peek(inspector_index);
-            uint32_t s2 = rbuf->get_seq(inspector_index % 4);
-            if (s1 != s2) continue;
             inspector_index++;
             std::cout << out.data << " ts=" << out.timestamp_ns << "\n";
         }

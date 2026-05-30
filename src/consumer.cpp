@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
-#include "ring_buffer.h"
+#include "ring_buffer_mutex.h"
 #include <time.h>
 #include <vector>
 #include <algorithm>
@@ -17,16 +17,22 @@ int main() {
     std::vector<uint64_t> stalls;
     Message out;
     timespec ts;
+    int spins = 0;
 
     
-    while (stalls.size() < 15) {
+    while (true) {
         if (rbuf->consume(&out)) {
             clock_gettime(CLOCK_MONOTONIC, &ts); 
             uint64_t now = ts.tv_sec * 1000000000ULL + ts.tv_nsec;
             uint64_t latency = now - out.timestamp_ns;
             std::cout << latency;
             stalls.push_back(latency);
-            std::cout << out.data << " ts=" << out.timestamp_ns << "\n"; 
+            std::cout << out.data << " ts=" << out.timestamp_ns << "\n";  
+            spins = 0;
+        }
+        else{
+            spins++;
+            if (spins > 10000000) break;
         }
     };
 
@@ -34,9 +40,6 @@ int main() {
     std::cout << "p50= " << stalls[stalls.size() / 2] << "\n"; 
     std::cout << "p90= " << stalls[stalls.size() * 9 / 10] << "\n"; 
     std::cout << "p99= " << stalls[stalls.size() * 99 / 100] << "\n"; 
-    for (uint64_t latency : stalls) {
-    std::cout << latency << "\n";
-}   
 
     sleep(10);
 }
