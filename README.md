@@ -45,4 +45,10 @@ lldb is apple's gdb which is kinda cool. it let me view the ringbuffer in json!
 as you can see, writes wrap around the ringbuffer, if i step through the seq lock updater, we see an odd number, and the ringbuffer updates sequentially.
 
 ## Two implementations: 
-- lock free stats
+
+Lock-free: p50 averages ~23µs, p99 averages ~32µs
+Mutex: p50 averages ~33µs, p99 averages ~48µs
+
+lock-free variances is lower, so more predictable. 
+
+Averages for both remain the same with and without the inspector included. 
