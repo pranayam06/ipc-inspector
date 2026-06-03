@@ -10,6 +10,8 @@ set(CMAKE_CXX_EXTENSIONS Off)
 add_executable(producer src/producer.cpp src/ring_buffer.cpp)
 add_executable(consumer src/consumer.cpp src/ring_buffer.cpp)
 add_executable(inspector src/inspector.cpp src/ring_buffer.cpp)
+add_executable(inspector-dash src/inspector_dash.cpp src/ring_buffer.cpp)
+
 
 add_executable(producer_mtex src/producer.cpp src/ring_buffer_mutex.cpp)
 target_compile_definitions(producer_mtex PRIVATE USE_MUTEX)

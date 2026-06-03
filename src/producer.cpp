@@ -19,9 +19,10 @@ int main() {
 
     while (!rbuf->consumer_ready.load(std::memory_order_acquire)) {}
 
-    for (int i = 0; i< 1000; i++) {
+    for (int i = 0; i< 100000000; i++) {
         std::string msg = "msg" + std::to_string(i);
         rbuf->publish(msg.c_str());
     }
+    sleep(5);
     shm_unlink("/ipc-channel"); 
 }
