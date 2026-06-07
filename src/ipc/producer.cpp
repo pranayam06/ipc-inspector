@@ -4,9 +4,9 @@
 #include <cstring>
 #include <string>
 #ifdef USE_MUTEX
-    #include "ring_buffer_mutex.h"
+    #include "../ring_buffer_mutex.h"
 #else
-    #include "ring_buffer.h"
+    #include "../ring_buffer.h"
 #endif
 
 int main() {

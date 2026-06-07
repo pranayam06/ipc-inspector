@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
-#include "ring_buffer_mutex.h"
+#include "../ring_buffer_mutex.h"
 
 int main() {
     int fd = shm_open("/ipc-channel", O_RDWR, 0666);
