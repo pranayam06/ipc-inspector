@@ -3,3 +3,5 @@
 - delete magic nums
 - pick optimal usleep in producer
 - filtering 
+- ctrl c signal handling 
+- producer stopped signal handling 
