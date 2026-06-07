@@ -1,0 +1,5 @@
+- signal handling to pause 
+- inspector should still print if producer slows down and stops sending message for over a second (throughput should display 0)
+- delete magic nums
+- pick optimal usleep in producer
+- filtering 

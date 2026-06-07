@@ -9,7 +9,7 @@ sleep 0.5
 ./consumer &
 CONSUMER_PID=$!
 
-./inspector-dash &
+./inspector-dash --filter "$1" &
 INSPECTOR_PID=$!
 
 wait $CONSUMER_PID

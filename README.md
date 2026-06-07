@@ -51,4 +51,4 @@ Mutex: p50 averages ~33µs, p99 averages ~48µs
 
 lock-free variances is lower, so more predictable. 
 
-Averages for both remain the same with and without the inspector included. 
+Averages for both remain the same with and without the inspector included.

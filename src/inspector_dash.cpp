@@ -9,7 +9,14 @@
 
 
 
-int main() {
+int main(int argc, char* argv[]) {
+    std::string filter = "";
+    for (int i = 1; i < argc; i++) {
+        if (std::string(argv[i]) == "--filter" && i + 1 < argc) {
+            filter = argv[i + 1];
+            i++;
+        }
+    }
     int fd = shm_open("/ipc-channel", O_RDWR, 0666);
     size_t size = sizeof(RingBuffer);
     void* ptr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0 ); 

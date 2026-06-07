@@ -22,6 +22,7 @@ int main() {
     for (int i = 0; i< 100000000; i++) {
         std::string msg = "msg" + std::to_string(i);
         rbuf->publish(msg.c_str());
+        usleep(100);
     }
     sleep(5);
     shm_unlink("/ipc-channel"); 
